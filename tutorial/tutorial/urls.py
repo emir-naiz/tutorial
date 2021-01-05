@@ -23,6 +23,7 @@ from rest_framework import routers
 
 urlpatterns = [
     path('', include('quickstart.urls')),
+    path('', include('carTrade.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
