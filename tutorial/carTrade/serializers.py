@@ -20,7 +20,7 @@ class ManufacturerSerializerList(serializers.ModelSerializer):
         fields = ['id', 'full_name', 'date_birth']
 
 class OrderSerializer(serializers.ModelSerializer):
-    user = serializers.CurrentUserDefault()
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Order
         fields = ['id', 'product', 'date_created', 'status', 'user']
