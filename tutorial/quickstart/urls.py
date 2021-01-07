@@ -6,7 +6,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('blogs', BlogViewsets)
 router.register('posts', PostViewsets)
-router.register(r'register', UserViewsets)
+# router.register(r'register', UserViewsets)
 router.register(r'authors', AuthorViewset)
 
 urlpatterns = [
