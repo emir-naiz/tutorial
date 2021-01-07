@@ -44,9 +44,10 @@ class Order(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=statuses, default='New order')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    postal_code = models.IntegerField()
 
-    # def __str__(self):
-    #     return self.product.name + ' ' + self.status
+    def str(self):
+        return self.product.name + ' ' + self.user.first_name + ' ' + str(self.postal_code)
 
     class Meta:
         verbose_name="Заказы"
