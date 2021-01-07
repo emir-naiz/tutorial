@@ -21,11 +21,19 @@ class ManufacturerSerializerList(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    status = serializers.CharField(read_only=True)
     class Meta:
         model = Order
-        fields = ['id', 'product', 'date_created', 'status', 'user']
+        fields = ['id', 'product', 'date_created', 'status', 'user', 'postal_code']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Order
-        fields = ['id', 'username', 'email', 'password']
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def save(self, **kwargs):
+        user = User(username=self.validated_data['username'], email=self.validated_data['email'])
+        password = self.validated_data['password']
+        user.set_password(password)
+        user.save()
+        return user
