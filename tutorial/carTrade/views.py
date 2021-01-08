@@ -7,16 +7,20 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from .serializers import *
 from .models import *
 from rest_framework.views import APIView
 from .tokens import account_activation_token
+from rest_framework import permissions
 
 
 class ProductViewsets(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class ManufacturerViewsets(viewsets.ModelViewSet):
     queryset = Manufacturer.objects.all()
@@ -29,6 +33,7 @@ class ManufacturerViewsets(viewsets.ModelViewSet):
 class OrderViewsets(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class SignUp(APIView):
     def post(self, request):
@@ -69,6 +74,15 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
+
+class LoginView(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
+
 
 
 
