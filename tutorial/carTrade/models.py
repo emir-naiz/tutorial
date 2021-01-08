@@ -13,7 +13,7 @@ class Product(models.Model):
         ('pickup truck', 'pickup truck'),
         ('convertible', 'convertible')
     )
-    image = models.ImageField()
+    image = models.ImageField(blank=True, null=True, verbose_name='Фото')
     name = models.CharField(max_length=50, verbose_name='Название авто')
     category = models.CharField(max_length=20, choices=cars, verbose_name='Категория')
     price = models.IntegerField(verbose_name='Цена')
