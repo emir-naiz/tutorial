@@ -26,7 +26,11 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'product', 'date_created', 'status', 'user', 'postal_code']
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCreationSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=20, min_length=5)
+    email = serializers.EmailField(allow_blank=False)
+    password = serializers.CharField(max_length=16, min_length=8)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
