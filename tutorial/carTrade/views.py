@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
@@ -31,16 +32,21 @@ class ManufacturerViewsets(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 class OrderViewsets(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        orders = Order.objects.filter(user=self.request.user)
+        return orders
 
 class SignUp(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserCreationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             user.is_active = False
+            group = Group.objects.get(name='private')
+            user.groups.add(group)
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your account.'
