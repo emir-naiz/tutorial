@@ -26,5 +26,6 @@ urlpatterns = [
     path('', include('carTrade.urls')),
     path('', include('gov_secret.urls')),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/v1/', include('likes.api.urls')),
 ]
