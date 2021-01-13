@@ -16,12 +16,20 @@ from .models import *
 from rest_framework.views import APIView
 from .tokens import account_activation_token
 from rest_framework import permissions
+from .permissions import IsStaffOrAuthReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class ProductViewsets(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrAuthReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category']
+    search_fields = ['name']
+    ordering_fields = ['price', 'name']
+
 
 class ManufacturerViewsets(viewsets.ModelViewSet):
     queryset = Manufacturer.objects.all()
