@@ -29,6 +29,9 @@ class Manufacturer(models.Model):
     description = models.TextField()
     date_birth = models.DateField()
 
+    def __str__(self):
+        return self.full_name
+
     class Meta:
         verbose_name = 'Проиводитель'
         verbose_name_plural = 'Проиводитель'
