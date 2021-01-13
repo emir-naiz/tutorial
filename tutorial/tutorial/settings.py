@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+from decouple import config
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,11 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'likes',
     'rest_framework',
     'rest_framework.authtoken',
     'quickstart',
     'carTrade',
     'gov_secret',
+    'django_filters',
+
 ]
 
 MIDDLEWARE = [
@@ -105,6 +110,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LIKES_MODELS = {
+    "carTrade.Product": {
+        'serializer': 'carTrade.serializers.ProductSerializer'
+    },
+    "quickstart.Blog": {
+        'serializer': 'quickstart.serializers.BlogSerializer'
+    },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'drf_link_header_pagination.LinkHeaderPagination',
+    'PAGE_SIZE': 3
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -126,16 +145,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10
+# }
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'nayzabekoff@gmail.com'
-EMAIL_HOST_PASSWORD = 'emirdinaadel06011995'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
+
